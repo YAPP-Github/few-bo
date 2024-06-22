@@ -22,5 +22,3 @@ import { UsersModule } from './users/users.module';
   providers: [AppService],
 })
 export class AppModule {}
-
-// mongodb+srv://admin:<password>@cluster0.lkxrrhr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
