@@ -1,0 +1,56 @@
+{
+    "article": {
+      "id": 1,
+      "member_id": 1,
+      "main_image_url": "image_url",
+      "title": "예나 지금이나 같은 킥보드 문제",
+      "category_cd": 0,
+      "created_at": "2024-06-25 21:17:39",
+      "deleted_at": null,
+      "mst": {
+        "article_mst_id": 1,
+        "content": ""
+      },
+      "problems": [
+        {
+          "id": 1,
+          "article_id": 1,
+          "title": "왜 우리나라에서는 스쿠터를 킥보드라고 부르는가?",
+          "contents": [
+            {"number": 1, "content": "국립국어원에서 정의했기 때문이다."},
+            {"number": 2, "content": "1999년 K2 Sports에서 출시한 스쿠터 브랜드에서 유래되었기 때문이다."},
+            {"number": 3, "content": "수영 발차기를 연습할 때 사용하는 판을 의미하기 때문이다."},
+            {"number": 4, "content": "영어로는 안장 여부와 상관없이 모두 스쿠터라고 부르기 때문이다."}
+          ],
+          "answer": "2",
+          "explanation": "1999년 K2 Sports에서 출시한 스쿠터 브랜드 '킥보드(Kickboard)'에서 유래되었기 때문에 우리나라에서는 스쿠터를 킥보드라고 부르게 되었습니다."
+        },
+        {
+          "id": 2,
+          "article_id": 1,
+          "title": "오토페드의 특징이 아닌 것은?",
+          "contents": [
+            {"number": 1, "content": "155cc 4기통 가솔린 엔진을 탑재했다."},
+            {"number": 2, "content": "핸들 바가 접혀 보관이 용이하다."},
+            {"number": 3, "content": "무게가 110kg 이하로 매우 가볍다."},
+            {"number": 4, "content": "미국 우정국과 경찰청과 계약을 맺었다."}
+          ],
+          "answer": "3",
+          "explanation": "오토페드는 무게가 110kg에 육박해 휴대용으로 쓰였는지는 미지수입니다."
+        },
+        {
+          "id": 3,
+          "article_id": 1,
+          "title": "전동 킥보드 공유 서비스의 등장이 전동 킥보드의 인기에 미친 영향은?",
+          "contents": [
+            {"number": 1, "content": "전동 킥보드가 레저용으로만 사용되었다."},
+            {"number": 2, "content": "이동 수단으로서의 전동 킥보드 사용이 증가했다."},
+            {"number": 3, "content": "전동 킥보드의 가격이 급격히 상승했다."},
+            {"number": 4, "content": "전동 킥보드의 안전 문제가 크게 감소했다."}
+          ],
+          "answer": "2",
+          "explanation": "공유형 전동 킥보드 서비스가 등장하면서 전동 킥보드는 이동 수단으로 사용되기 시작했습니다."
+        }
+      ]
+    }
+  }
