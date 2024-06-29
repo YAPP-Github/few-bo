@@ -120,3 +120,7 @@ Derived/
 *.xcodeproj
 *.p12
 master.key
+
+admin-crawler/chromedriver
+
+admin-crawler/result/
