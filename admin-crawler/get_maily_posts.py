@@ -2,10 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-import json
 import time
 
-def get_maily_posts():
+def get_maily_posts(url):
     # Set the path to the ChromeDriver
     chrome_driver_path = '/Users/annapo/Develop/few-bo/admin-crawler/chromedriver'
 
@@ -24,7 +23,7 @@ def get_maily_posts():
     driver = webdriver.Chrome(service=service, options=options)
 
     # Open the website
-    driver.get('https://maily.so/meowpunch')
+    driver.get(url)
     driver.implicitly_wait(3)
 
     # List to store links
