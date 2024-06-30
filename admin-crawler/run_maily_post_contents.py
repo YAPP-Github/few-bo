@@ -35,7 +35,7 @@ def main(url):
             })
 
     # 결과를 JSON 파일로 저장
-    output_file = f"/mnt/data/maily_contents_{url.split('//')[1].replace('/', '_')}.json"
+    output_file = f"result/maily_contents_{url.split('//')[1].replace('/', '_')}.json"
     with open(output_file, 'w', encoding='utf-8') as json_file:
         json.dump(results, json_file, ensure_ascii=False, indent=4)
 
@@ -44,8 +44,8 @@ def main(url):
 if __name__ == "__main__":
     # URL 목록
     urls = [
-        'https://maily.so/pensionletter',
-        'https://maily.so/meowpunch'
+        'https://maily.so/telescope',
+        'https://maily.so/gdmontly'
     ]
 
     # 각 URL에 대해 main 함수 호출
