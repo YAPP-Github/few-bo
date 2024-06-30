@@ -124,3 +124,5 @@ master.key
 admin-crawler/chromedriver
 
 admin-crawler/result/
+
+admin-crawler/.env
