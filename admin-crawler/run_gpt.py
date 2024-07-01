@@ -75,7 +75,7 @@ def generate_questions_and_category(content):
 
 def main(limit=None):
     # JSON 파일 경로
-    file_path = 'telescope.json'
+    file_path = 'origin/telescope.json'
 
     # JSON 파일 읽기
     data = read_json(file_path)

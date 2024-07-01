@@ -126,3 +126,11 @@ admin-crawler/chromedriver
 admin-crawler/result/
 
 admin-crawler/.env
+
+admin-crawler/batch/
+
+admin-crawler/tmp/meowpunch/
+
+admin-crawler/tmp/maily/
+
+admin-crawler/tmp/

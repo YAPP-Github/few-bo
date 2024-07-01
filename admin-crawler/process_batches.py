@@ -9,7 +9,6 @@ load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=openai_api_key)
 
-
 def read_json(file_path):
     """
     JSON 파일을 읽어 내용을 반환합니다.
@@ -24,13 +23,14 @@ def read_json(file_path):
         data = json.load(file)
     return data
 
-
-def prepare_batch_requests(content_list):
+def prepare_batch_requests(content_list, start_id, base_filename):
     """
     Batch 요청을 준비합니다.
 
     Parameters:
     content_list (list): 처리할 콘텐츠 리스트.
+    start_id (int): custom_id의 시작 값.
+    base_filename (str): 파일 경로의 기본 이름.
 
     Returns:
     str: 생성된 JSONL 파일 경로.
@@ -46,20 +46,22 @@ def prepare_batch_requests(content_list):
                     "role": "system",
                     "content": '''
                     #지침
-                    - 너는 article에 대한 내용으로 문제를 생성해주는 기계야.
-                    - 너는 좀 더 좋은 문제를 생성해내려고 노력해야해. 내용을 잘 읽었으면 이해할 수 있을 법한 문제여야해.
-
+                    - 너는 {article}에 대한 내용을 정리하는 기계야. 
+                    - 새로운 문장을 창작하는 것보다, 기존에 있는 내용을 옮기는게 중요해.
+                    - 핵심 문단은 3개 이어야해!! 그리고 각각 400자가 넘어야 해!!
+                    
                     #제약사항
-                    - article의 문제는 단순 암기식이 아니라 창의적이고 article의 내용을 잘 이해했는제 확인해볼 수 있는 좋은 문제들로 구성되어야 해.
-                    - 3개의 문제와 4개의 선지, 해설을 포함해야해.
-                    - 해설은 지문에서의 핵심 근거인 문장이 들어있으면 좋겠어.
+                    - 핵심 문단은 문단 전체 내용을 구성해야해. 길면 길수록 좋아, 새로운 문장을 만들라는게 아니라 기존에 {article}에서 핵심 문단을 그대로 옮기라는 뜻이야.
+                    - 핵심 문단이 만약 짧으면, 주변 문단을 이어붙어줘야해. 왜냐하면 해당 핵심 문단으로 문제를 생성할텐데 더욱 풍부한 문제를 만들기 위함이야.
+                    - 핵심 문단은 400자가 넘어야해, 만약 넘지 않으면 400자가 넘을 때까지 주변 문단을 이어붙여야해. 핵심 문단들이 겹치는 문제는 상관없어.
+                    - 핵심 문단은 3개 이어야해. 만약 3개가 넘는다면, 이어 붙여서 3개를 만들어주면 돼.   
                     - article에 관련된 category는 다음 중 하나로 정해져야해: politics, economy, society, culture, life, it, science, entertainments, sports, global, etc.
-
+                    
                     #입력문
-                    지침에 따라 {article}을 이해하고, 제약사항에 맞게 출력문을 작성해줘
-
+                    지침에 따라 {article}을 이해하고, 제약사항에 맞게 출력문을 작성해줘 제목은 {title}이야
+                    
                     #출력문
-                    {{\n    \"category\": \"카테고리\",\n    \"questions\": [\n        {{\n            \"title\": \"질문1\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문2\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문3\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }}\n    ]\n}}
+                   {{\n    \"title\": \"제목\",\n    \"category\": \"카테고리\",\n    \"core\": [\n        \"핵심 문단 1\",\n        \"핵심 문단 2\",\n        \"핵심 문단 3\"\n    ],\n    \"description\": \"전체 내용 요약\"\n}}
                     '''
                 }
             ]
@@ -67,20 +69,19 @@ def prepare_batch_requests(content_list):
     }
 
     batches = []
-    for id, content in enumerate(content_list):
+    for id, content in enumerate(content_list, start=start_id):
         temp = deepcopy(init_template)
         temp['custom_id'] = f'{id}'
         temp['body']['messages'].append({"role": "user", "content": content})
         batches.append(temp)
 
-    batch_file_path = 'tmp/batchinput.jsonl'
+    batch_file_path = f'batch/proceed_{base_filename}_batchinput_{start_id}.jsonl'
     with open(batch_file_path, 'w') as file:
         for item in batches:
             json_string = json.dumps(item)
             file.write(json_string + '\n')
 
     return batch_file_path
-
 
 def create_batch(batch_file_path):
     """
@@ -94,7 +95,7 @@ def create_batch(batch_file_path):
     """
     batch_input_file = client.files.create(
         file=open(batch_file_path, "rb"),
-        purpose="tmp"
+        purpose="batch"
     )
 
     batch_input_file_id = batch_input_file.id
@@ -136,46 +137,46 @@ def get_batch_results(batch_id):
     batch_results = client.batches.retrieve(batch_id).result
     return batch_results
 
+def process_batches(file_path, limit_per_batch=20):
+    """
+    파일 경로에 대한 콘텐츠를 처리하고 Batch 요청을 생성합니다.
 
-def main(file_path, limit=None):
-    # JSON 파일 경로
-    file_path = file_path
-
-    # JSON 파일 읽기
+    Parameters:
+    file_path (str): JSON 파일 경로.
+    limit_per_batch (int): 각 Batch 요청당 최대 콘텐츠 수.
+    """
     data = read_json(file_path)
 
-    # 각 콘텐츠에 대해 질문 생성
     content_list = []
     for idx, item in enumerate(data):
-        if limit is not None and idx >= limit:
-            break
-
         title = item['content']['title']
         body = item['content']['body']
-        content = f"{title}\n\n{body}"
+        content = f"지침에 따라 {body}을 이해하고, 제약사항에 맞게 출력문을 작성해줘 제목은 {title}이야"
         content_list.append(content)
 
-    # Batch 요청을 준비하고 생성
-    batch_file_path = prepare_batch_requests(content_list)
-    batch_id = create_batch(batch_file_path)
-    print(f"Batch ID: {batch_id}")
+    total_batches = (len(content_list) + limit_per_batch - 1) // limit_per_batch
 
-    results = [batch_id]
+    batch_ids = []
+    base_filename = os.path.basename(file_path).split('.')[0]
+    for batch_num in range(total_batches):
+        start_index = batch_num * limit_per_batch
+        end_index = start_index + limit_per_batch
+        batch_contents = content_list[start_index:end_index]
+        batch_file_path = prepare_batch_requests(batch_contents, start_id=start_index, base_filename=base_filename)
+        batch_id = create_batch(batch_file_path)
+        print(f"Batch {batch_num + 1}/{total_batches} ID: {batch_id}")
+        batch_ids.append(batch_id)
 
-    # 결과를 JSON 파일로 저장
-    output_file = 'tmp/batch_ids.json'
+    # Batch ID를 JSON 파일로 저장
+    output_file = f'batch/proceed_{base_filename}_batch_ids.json'
     with open(output_file, 'w', encoding='utf-8') as file:
-        json.dump(results, file, ensure_ascii=False, indent=4)
+        json.dump(batch_ids, file, ensure_ascii=False, indent=4)
 
-    print(f"질문이 생성되고 {output_file}에 저장되었습니다.")
-
+    print(f"Batch IDs가 {output_file}에 저장되었습니다.")
 
 if __name__ == "__main__":
-    import time
-    # limit 값을 설정하여 테스트할 아티클 수를 제한할 수 있습니다.
     file_paths = [
-        'meowpunch.json',
         'pensionletter.json'
     ]
     for file_path in file_paths:
-        main(file_path)
+        process_batches(file_path)
