@@ -134,3 +134,9 @@ admin-crawler/tmp/meowpunch/
 admin-crawler/tmp/maily/
 
 admin-crawler/tmp/
+
+admin-crawler/cleaned/
+
+admin-crawler/origin/
+
+admin-crawler/output/

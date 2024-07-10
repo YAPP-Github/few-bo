@@ -37,7 +37,7 @@ def main():
                 print(f"An error occurred while processing content to batch: {e}")
         elif choice == '3':
             base_filename = input("Enter the base filename (e.g., pensionletter): ")
-            batch_file_path = f'batch/{base_filename}_batch_ids.json'
+            batch_file_path = f'batch/{base_filename}_cleaned_batch_ids.json'
             try:
                 retrieve_batch_results(batch_file_path)
             except Exception as e:

@@ -54,3 +54,7 @@ def clean_and_save_json(json_file_path, output_dir='cleaned'):
         json.dump(data, file, ensure_ascii=False, indent=4)
 
     print(f"정리된 JSON 파일이 {output_file_path}에 저장되었습니다.")
+
+# # 사용 예시
+# json_file_path = 'origin/pensionletter.json'
+# clean_and_save_json(json_file_path)

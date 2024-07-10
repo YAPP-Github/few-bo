@@ -27,27 +27,29 @@ def process_content_to_batch(file_path, limit_per_batch=20):
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
-                "model": "gpt-3.5-turbo",
+                "model": "gpt-4o",
                 "messages": [
                     {
                         "role": "system",
                         "content": '''
                         #지침
                         - 너는 article에 대한 내용으로 문제를 생성해주는 기계야.
-                        - 너는 좀 더 좋은 문제를 생성해내려고 노력해야해. 내용을 잘 읽었으면 이해할 수 있을 법한 문제여야 해.
+                        - article을 잘 읽었으면 이해할 수 있을 법한 문제여야 해.
+                        - artilce의 핵심 내용을 잘 읽었는지를 확인해볼 수 있는 퀄리티 높은 문제들로 구성해야해.
 
                         #제약사항
-                        - article의 문제는 단순 암기식이 아니라 창의적이고 article의 내용을 잘 이해했는제 확인해볼 수 있는 좋은 문제들로 구성되어야 해.
-                        - 3개의 문제와 4개의 선지, 해설을 포함해야해.
-                        - 해설은 지문에서의 핵심 근거인 문장이 들어있으면 좋겠어.
-                        - 요약은 전체 지문에 대한 요약이 들어가야 해.
-                        - article에 관련된 category는 다음 중 하나로 정해져야해: politics, economy, society, culture, life, it, science, entertainments, sports, global, etc.
-
+                        - 3개의 문제 질문(question_title)와 4개의 선지(question_content), 해설(question_explanation)을 포함해야해.
+                        - question_explanation은 article에서의 핵심 근거인 문장이 들어있으면 좋겠어.
+                        - 문제의 질문(question_title)은 자세하게 작성해줘. 
+                        - 요약(description)은 전체 article에 대한 요약이 들어가야 해.
+                        - 카테고리(category)는 대문자 영어여야해. 다음 중 하나로 정해져야해 : ECONOMY, IT, MARKETING, CULTURE, SCIENCE
+                        - 출력문에만 맞게 작성해줘 ``` 이런 코드블록을 절대 사용하지마
+                        
                         #입력문
-                        지침에 따라 {article}을 이해하고, 제약사항에 맞게 출력문을 작성해줘. 제목은 {title}이야
+                        지침에 따라 {article}을 이해하고, 제약사항에 맞게 출력문을 작성해줘. 제목은 {title} 이야
 
                         #출력문
-                        {{\n  \"title\": \"제목\",  \"category\": \"카테고리\", \"description\": \"요약\", \n    \"questions\": [\n        {{\n            \"title\": \"질문1\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문2\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문3\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }}\n    ]\n}}
+                        {{\n  \"title\": \"제목\",  \"category\": \"카테고리\", \"description\": \"요약\", \n    \"questions\": [\n        {{\n            \"title\": \"질문1\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문2\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문3\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"number\",\n            \"explanation\": \"해설\"\n        }}\n    ]\n}}
                         '''
                     }
                 ]
@@ -116,7 +118,3 @@ def process_content_to_batch(file_path, limit_per_batch=20):
         json.dump(batch_ids, file, ensure_ascii=False, indent=4)
 
     print(f"Batch IDs가 {output_file}에 저장되었습니다.")
-
-# 사용 예시
-if __name__ == "__main__":
-    process_content_to_batch('cleaned/pensionletter.json_cleaned.json')

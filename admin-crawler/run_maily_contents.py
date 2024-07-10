@@ -163,11 +163,7 @@ def main(url):
 if __name__ == "__main__":
     # URL list
     urls = [
-        'https://maily.so/telescope',
-        'https://maily.so/gdmontly',
-        'https://maily.so/diggin',
-        'https://maily.so/meowpunch',
-        'https://maily.so/pensionletter'
+        'https://maily.so/blackcon'
     ]
 
     # Call main function for each URL
