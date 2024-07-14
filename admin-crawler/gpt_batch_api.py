@@ -31,7 +31,6 @@ def prepare_batch_requests(content_list):
 
     Parameters:
     content_list (list): 처리할 콘텐츠 리스트.
-
     Returns:
     str: 생성된 JSONL 파일 경로.
     """
