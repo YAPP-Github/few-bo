@@ -4,6 +4,19 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import json
+from markdownify import markdownify as md
+
+def html_to_md(html_string):
+    """
+    Converts an HTML string to a Markdown string.
+
+    Parameters:
+    html_string (str): The HTML content to convert.
+
+    Returns:
+    str: The converted Markdown content.
+    """
+    return md(html_string)
 
 def get_notion_content(link):
     # Set the path to the ChromeDriver
@@ -26,21 +39,26 @@ def get_notion_content(link):
     driver.get(link)
     driver.implicitly_wait(3)
 
-    # Extract the title and body content
+    # Extract the title, body content, and image
     title_xpath = '//*[@id="__next"]/div/div/div[1]/div/div/div[2]/div[1]/div/div[3]/h1'
     body_xpath = '//*[@id="__next"]/div/div/div[1]/div/div/div[2]/div[3]'
+    image_xpath = '//*[@id="__next"]/div/div/div[1]/div/div/div[2]/div[1]/img'
 
     try:
         title_element = driver.find_element(By.XPATH, title_xpath)
         body_element = driver.find_element(By.XPATH, body_xpath)
+        image_element = driver.find_element(By.XPATH, image_xpath)
 
         title_text = title_element.text
         body_html = body_element.get_attribute('innerHTML')
+        image_url = image_element.get_attribute('src')
+
 
         # Create a dictionary to store the data
         data = {
             'title': title_text,
-            'body': body_html
+            'body': md(body_html),
+            'image': image_url
         }
 
         print("Content extracted successfully")
@@ -67,7 +85,7 @@ def save_content_as_json(content, output_file_path):
     print(f"Content saved to {output_file_path}")
 
 # Example usage
-link = 'https://www.fig1.kr/a2e9a158-26bb-4cb3-8f40-351c1cf11f03'
+link = 'https://www.fig1.kr/history/printer'
 content = get_notion_content(link)
 if content:
     save_content_as_json(content, 'output.json')

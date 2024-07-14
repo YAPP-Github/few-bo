@@ -3,7 +3,6 @@ import json
 from get_notion_posts import get_notion_posts
 from get_notion_content import get_notion_content, save_content_as_json
 
-
 def run_notion_post_contents(url):
     # Get all the notion posts links from the provided URL
     links = get_notion_posts(url)
