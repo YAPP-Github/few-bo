@@ -56,10 +56,24 @@ def get_maily_posts(url):
         # Find all elements matching the thumbnail pattern
         thumbnail_elements = driver.find_elements(By.XPATH, '//*[@id="preRenderedPosts"]/div/a/div[2]/div')
 
+        # Check alternative xPath if no elements found
+        if not link_elements or not thumbnail_elements:
+            link_elements = driver.find_elements(By.XPATH, '//*[@id="preRenderedPosts"]/a')
+            thumbnail_elements = driver.find_elements(By.XPATH, '//*[@id="preRenderedPosts"]/a/div[1]/img')
+
+            # If still no elements found, try increasing index in the pattern
+            index = 1
+            while not link_elements or not thumbnail_elements:
+                index += 1
+                link_elements = driver.find_elements(By.XPATH, f'//*[@id="preRenderedPosts"]/a[{index}]')
+                thumbnail_elements = driver.find_elements(By.XPATH, f'//*[@id="preRenderedPosts"]/a[{index}]/div[1]/img')
+                if not link_elements:
+                    break  # Exit loop if no more elements are found
+
         for link_element, thumbnail_element in zip(link_elements, thumbnail_elements):
             href = link_element.get_attribute('href')
-            thumbnail_url = thumbnail_element.value_of_css_property('background-image')
-            thumbnail_url = thumbnail_url.split('"')[1] if 'url("' in thumbnail_url else None
+            thumbnail_url = thumbnail_element.get_attribute('src') if thumbnail_element.tag_name == 'img' else thumbnail_element.value_of_css_property('background-image')
+            thumbnail_url = thumbnail_url.split('"')[1] if 'url("' in thumbnail_url else thumbnail_url
 
             if href not in [post['link'] for post in posts]:
                 posts.append({'link': href, 'thumbnailImageURL': thumbnail_url})
@@ -156,14 +170,14 @@ def main(url):
     # Save results to a JSON file
     # Generate output filename based on URL
     output_filename = url.split('/')[-1] + '.json'
-    output_file = f"{output_filename}"
+    output_file = f"origin/{output_filename}"
     save_content_as_json(results, output_file)
 
 
 if __name__ == "__main__":
     # URL list
     urls = [
-        'https://maily.so/diggin'
+        'https://maily.so/bom.coach'
     ]
 
     # Call main function for each URL

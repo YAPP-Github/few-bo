@@ -16,4 +16,4 @@ def send_request(title, main_image_url, category, description):
         print(f"요청 전송 실패. 상태 코드: {response.status_code}")
         print(response.text)
 
-send_request("Top 1% 개발자로 거듭나는 확실한 처방전", "https://eehhqckznniu25210545.cdn.ntruss.com/images/2024-07-11/UhS4u1BnAPVB2yeO.png", "IT", "해외 IT 업계 개발자 커리어 번역글을 제공합니다.")
+send_request("봄코치의 코칭노트", "https://eehhqckznniu25210545.cdn.ntruss.com/images/2024-07-27/TO05tgL5oQ8MsSu7.png", "CULTURE", "여전히 낯설지만, 우리의 일과 삶에 꼭 필요한 코칭적 시선과 대화를 위하여.")

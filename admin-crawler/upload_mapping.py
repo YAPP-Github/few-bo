@@ -22,7 +22,7 @@ def send_post_requests(post_url, workbook_id, article_ids):
 
 # 사용 예제
 post_url = "https://api.fewletter.site/api/v1/admin/relations/articles"  # 추가 요청을 위한 URL
-workbook_id = 7  # 실제 workbookId로 교체
-article_ids = [99, 101, 104, 105, 107, 108, 112] # list(range(68, 74))  # 실제 articleId 리스트로 교체
+workbook_id = 15 # 실제 workbookId로 교체
+article_ids = list(range(206, 213)) #   # 실제 articleId 리스트로 교체
 
 send_post_requests(post_url, workbook_id, article_ids)
