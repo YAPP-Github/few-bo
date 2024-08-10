@@ -6,6 +6,9 @@
 	<array>
 		<string>applinks:https://www.fewletter.com</string>
 		<string>applinks:www.fewletter.com</string>
+		<string>applinks:fewletter.com</string>
+		<string>applinks:https://develop.24th-web-team-1-fe.pages.dev</string>
+		<string>applinks:develop.24th-web-team-1-fe.pages.dev</string>
 	</array>
 </dict>
 </plist>
