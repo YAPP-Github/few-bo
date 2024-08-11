@@ -148,3 +148,7 @@ notion-to-github-markdown-main/
 *.json
 
 Few-AOS/key
+
+*.jks
+
+Few-AOS/app/release/
