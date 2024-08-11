@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 import WebKit
 
+let baseURLString = "https://www.fewletter.com"
+public let baseURL = URL(string: baseURLString)!
+
 struct WebView: UIViewRepresentable {
     let url: URL
     let webView: WKWebView = .init()
@@ -19,15 +22,14 @@ struct WebView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> WKWebView {
         webView.navigationDelegate = context.coordinator
+        webView.allowsBackForwardNavigationGestures = true
         webView.load(URLRequest(url: url))
-        print("makeUIView: \(url)")
         return webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
         if webView.url != url {
             webView.load(URLRequest(url: url))
-            print("updateUIView: \(url)")
         }
     }
 

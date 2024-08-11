@@ -8,10 +8,6 @@
 import SwiftUI
 import AppTrackingTransparency
 
-let baseURLString = "https://www.fewletter.com"
-public let baseURL = URL(string: baseURLString)!
-
-
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
