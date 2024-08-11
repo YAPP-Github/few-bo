@@ -1,6 +1,5 @@
 package com.yapp.few
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,22 +8,38 @@ import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.yapp.few.ui.theme.FewTheme
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    private var webViewUrl: String = "https://www.fewletter.com"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 인텐트에서 URL을 추출
+        intent?.data?.let { uri: Uri ->
+            webViewUrl = uri.toString()
+        }
+
         setContent {
             FewTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    WebViewContainer(url = "https://www.fewletter.com")
+                WebViewContainer(url = webViewUrl)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // onResume에서 인텐트를 다시 확인하여 URL을 처리
+        intent?.data?.let { uri: Uri ->
+            webViewUrl = uri.toString()
+            setContent {
+                FewTheme {
+                    WebViewContainer(url = webViewUrl)
                 }
             }
         }
