@@ -27,6 +27,9 @@ struct WebView: UIViewRepresentable {
         webView.navigationDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
         webView.load(URLRequest(url: currentURL))
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(WKWebView.reloadWebView(_:)), for: .valueChanged)
+        webView.scrollView.addSubview(refreshControl)
         return webView
     }
     
@@ -109,5 +112,12 @@ struct WebView: UIViewRepresentable {
             }
             decisionHandler(.allow)
         }
+    }
+}
+
+extension WKWebView {
+    @objc func reloadWebView(_ sender: UIRefreshControl) {
+        self.reload()
+        sender.endRefreshing()
     }
 }
