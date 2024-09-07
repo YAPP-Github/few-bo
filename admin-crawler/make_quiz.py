@@ -32,16 +32,16 @@ def prepare_batch_requests(content_list):
                     "role": "system",
                     "content": '''
                     #지침
-                    - 너는 article에 대한 내용으로 문제를 생성해주는 기계야.
-                    - article을 잘 읽었으면 이해할 수 있을 법한 문제여야 해. 
-                    - artilce의 핵심 내용을 잘 읽었는지를 확인해볼 수 있는 수준 높고 흥미로운 문제들로 구성해야해. 날짜를 물어보거나, 단어 철자를 물어보는 문제는 내지 말아줘.
+                    - 너는 article에 대한 내용으로 퀴즈를 생성해주는 기계야.
+                    - article을 잘 읽었으면 이해할 수 있을 법한 퀴즈여야 해. 
+                    - artilce의 핵심 내용을 잘 읽었는지를 확인해볼 수 있는 수준 높고 흥미로운 퀴즈들로 구성해야해. 날짜를 물어보거나, 단어 철자를 물어보는 퀴즈를 내지 말아줘.
 
                     #제약사항
-                    - 3개의 문제 질문(question_title)와 4개의 선지(question_content), 해설(question_explanation)을 포함해야해.
+                    - 3개의 퀴즈 질문(question_title)와 4개의 선지(question_content), 해설(question_explanation)을 포함해야해.
                     - question_explanation은 article에서의 핵심 근거인 문장이 들어있으면 좋겠어.
-                    - 문제의 질문(question_title)은 자세하게 작성해줘. 
+                    - 퀴즈의 질문(question_title)은 자세하게 작성해줘. 
                     - 요약(description)은 전체 article에 대한 요약이 들어가야 해.
-                    - 카테고리(category)는 대문자 영어여야해. 다음 중 하나로 정해져야해 : ECONOMY, IT, MARKETING, CULTURE, SCIENCE
+                    - 카테고리(category)는 대문자 영어여야해. 다음 중 하나로 정해져야해 : 경제, IT, 마케팅, 교양, 과학
                     - 출력문에만 맞게 작성해줘 ``` 이런 코드블록을 절대 사용하지마
                     - answer에는 오직 숫자만 들어가야해.
 
@@ -50,6 +50,8 @@ def prepare_batch_requests(content_list):
 
                     #출력문
                     {{\n  \"title\": \"제목\",  \"category\": \"카테고리\", \"description\": \"요약\", \n    \"questions\": [\n        {{\n            \"title\": \"질문1\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문2\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"선지 number\",\n            \"explanation\": \"해설\"\n        }},\n        {{\n            \"title\": \"질문3\",\n            \"contents\": [\n                {{\"number\": 1, \"content\": \"선지1\"}},\n                {{\"number\": 2, \"content\": \"선지2\"}},\n                {{\"number\": 3, \"content\": \"선지3\"}},\n                {{\"number\": 4, \"content\": \"선지4\"}}\n            ],\n            \"answer\": \"number\",\n            \"explanation\": \"해설\"\n        }}\n    ]\n}}
+                    
+                    {지침}에 따라 {입력문}을 받아서 {제약사항}에 맞게 {출력문}을 작성해줘
                     '''
                 }
             ]
@@ -74,7 +76,7 @@ def create_and_submit_batches(json_file_path):
         title = article['content']['title']
         body = article['content']['body']
         cleaned_body = remove_links_and_format(body)
-        article['content']['body'] = cleaned_body
+        article['content']['body'] = body
         content = f"지침에 따라 {cleaned_body}을 이해하고, 제약사항에 맞게 출력문을 작성해줘. 제목은 {title}이야"
         content_list.append(content)
 
@@ -137,7 +139,7 @@ def merge_data(original_data, batch_results):
             item['content'].update(corresponding_batch_result)
             merged_data.append(item)
         else:
-            print(f"Skipping item with title '{title}' due to missing required fields")
+            print(f"Skipping item with title '{title}' due to missing required fields {batch_results}")
 
     return merged_data
 

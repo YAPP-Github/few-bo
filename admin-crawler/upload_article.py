@@ -46,7 +46,7 @@ def send_request(json_path, url, writer_email):
             print(response.text)
 
 # 사용 예제
-json_path = "result/bom_result.json"  # JSON 파일의 실제 경로로 교체
-endpoint_url = "https://api.fewletter.site/api/v1/admin/articles"
-writer_email = "bom-coach@naver.com"  # 실제 작성자 이메일로 교체
+json_path = "result/local_result.json"  # JSON 파일의 실제 경로로 교체
+endpoint_url = "https://api.fewletter.shop/api/v1/admin/articles"
+writer_email = "miya.ajin.c@gmail.com"  # 실제 작성자 이메일로 교체
 send_request(json_path, endpoint_url, writer_email)
